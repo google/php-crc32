@@ -13,7 +13,7 @@ $tests = array(
         'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789' => '1fc2e6d2',
         '12345678901234567890123456789012345678901234567890123456789012345678901234567890' => '7ca94a72',
     ),
-    CRC32::Castagnoli => array(
+    CRC32::CASTAGNOLI => array(
         '' => '00000000',
         'a' => 'c1d04330',
         'abc' => '364b3fb7',

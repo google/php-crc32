@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 class CRC32
 {
@@ -10,16 +9,16 @@ class CRC32
     // Castagnoli's polynomial, used in iSCSI, SCTP, Google Cloud Storage,
     // Apache Kafka, and has hardware-accelerated in modern CPUs.
     // https://dx.doi.org/10.1109/26.231911
-    const Castagnoli = 0x82f63b78;
+    const CASTAGNOLI = 0x82f63b78;
 
     // Koopman's polynomial.
     // https://dx.doi.org/10.1109/DSN.2002.1028931
-    const Koopman = 0xeb31d82e;
+    const KOOPMAN = 0xeb31d82e;
 
     // The size of the checksum in bytes.
-    const Size = 4;
+    const SIZE = 4;
 
-    private $table;
+    private $table = array();
 
     public function __construct(int $polynomial)
     {
