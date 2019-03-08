@@ -11,8 +11,8 @@ all crc32 polynomials, including the useful Castagnoli (`crc32c`).
 ```php
 require('crc32.php');
 
-$crc = new CRC32(CRC32::Castagnoli);
-$crc->update("hello");
+$crc = $crc = CRC32::create(CRC32::CASTAGNOLI);
+$crc->update('hello');
 echo $crc->hash();
 ```
 
@@ -32,6 +32,10 @@ Thus this implementation is about twice as slow, however, it lets you use any po
 # Related
 
 * https://bugs.php.net/bug.php?id=71890
+
+# TODO
+
+[ ] Test if this works on 32 bit machine.
 
 # Licence (Apache 2)
 

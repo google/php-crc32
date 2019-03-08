@@ -1,9 +1,32 @@
 <?php
 
-class CRC32
+interface CRC32Interface {
+    function update($buffer);
+    function reset();
+    function hash(bool $raw_output = false) : string;
+
+    function version() : string;
+}
+
+// TODO Make sure the following two functions are private!
+
+function int2hex($i) : string
 {
+    return str_pad(dechex($i), 8, '0', STR_PAD_LEFT);
+}
+
+function crc_hash($crc, bool $raw_output = false) : string
+{
+    $crc = $crc & 0xffffffff;
+    if ($raw_output) {
+        return pack('L', $crc); // TODO Test this works
+    }
+    return int2hex($crc);
+}
+
+
+abstract class CRC32 {
     // IEEE is used by ethernet (IEEE 802.3), v.42, fddi, gzip, zip, png, ...
-    // PHP calls it "crc32b".
     const IEEE = 0xedb88320;
 
     // Castagnoli's polynomial, used in iSCSI, SCTP, Google Cloud Storage,
@@ -18,15 +41,126 @@ class CRC32
     // The size of the checksum in bytes.
     const SIZE = 4;
 
-    private $table = array();
-
-    public function __construct(int $polynomial)
-    {
-        $this->table = self::createTable($polynomial);
-        $this->crc = ~0;
+    private static function has_builtin($algo) : bool {
+        return in_array($algo, hash_algos());
     }
 
-    private static function createTable(int $polynomial) : array
+    public static function create(int $polynomial) : CRC32Interface
+    {
+        if ($polynomial === self::IEEE) {
+            if (self::has_builtin('crc32b')) {
+                return new CRC32_Builtin('crc32b');
+            }
+        }
+
+        if ($polynomial === self::CASTAGNOLI) {
+            if (function_exists('crc32c')) {
+                return new CRC32C_Google();
+            }
+
+            if (self::has_builtin('crc32c')) {
+                return new CRC32_Builtin('crc32b');
+            } 
+        }
+
+        // Fallback to the pure PHP version
+        return new CRC32_PHP($polynomial);
+    }
+}
+
+// TODO Allow the classes to be copied
+// TODO Document
+// // Use the Google Hardware Accelerated version
+final class CRC32C_Google implements CRC32Interface
+{
+    public function __construct()
+    {
+        $this->reset();
+    }
+
+    public function reset()
+    {
+        $this->crc = hex2bin('00000000');
+    }
+
+    public function update($buffer)
+    {
+        crc32c($buffer, $this->crc);
+    }
+
+    public function hash(bool $raw_output = false) : string
+    {
+        if ($raw_output) {
+            return $this->crc;
+        }
+        return bin2hex($this->crc);
+    }
+
+    public function version() : string
+    {
+        return 'Hardware accelerated (https://github.com/google/crc32c)'; 
+    }
+}
+
+// TODO Document
+final class CRC32_Builtin implements CRC32Interface
+{
+    public function __construct(string $algo)
+    {
+        // TODO Check this is actually a crc algo
+        $this->algo = $algo;
+        $this->reset();
+    }
+
+    public function reset()
+    {
+        $this->hc = hash_init($this->algo);
+    }
+
+    public function update($buffer)
+    {
+        hash_update($this->hc, $buffer);
+    }
+
+    public function hash(bool $raw_output = false) : string
+    {
+        return hash_final($this->hc, $raw_output);
+    }
+
+    public function version() : string
+    {
+        return $this->algo . ' PHP HASH';
+    }
+}
+
+final class CRC32Table
+{
+    private static $tables = array();
+
+    static function print(array $table)
+    {
+        foreach ($table as $i => $value) {
+            echo "0x" . int2hex($value) . ",";
+            if ($i % 4 == 3) {
+                echo "\n";
+            } else {
+                echo " ";
+            }
+        }
+
+        echo "\n\n";
+    }
+
+    static function get(int $polynomial) : array
+    {
+        if (array_key_exists($polynomial, self::$tables)) {
+            return self::$tables[$polynomial];
+        }
+        self::$tables[$polynomial] = self::create($polynomial);
+        return self::$tables[$polynomial];
+    }
+
+    static function create(int $polynomial) : array
     {
         $table = array_fill(0, 255, 0);
 
@@ -44,6 +178,20 @@ class CRC32
 
         return $table;
     }
+}
+
+// TODO Class comments
+// Pure PHP implementation of the CRC32 algorithm.
+final class CRC32_PHP implements CRC32Interface
+{
+    private $table = array();
+
+    public function __construct(int $polynomial)
+    {
+        $this->polynomial = $polynomial;
+        $this->table = CRC32Table::get($polynomial);
+        $this->reset();
+    }
 
     public function reset()
     {
@@ -60,17 +208,13 @@ class CRC32
         $this->crc = $crc;
     }
 
-    private static function int2hex($i) : string
-    {
-        return str_pad(dechex($i), 8, '0', STR_PAD_LEFT);
-    }
-
     public function hash(bool $raw_output = false) : string
     {
-        $crc = ~$this->crc & 0xffffffff;
-        if ($raw_output) {
-            return pack('L', $crc); // TODO Test this works
-        }
-        return self::int2hex($crc);
+        return crc_hash(~$this->crc, $raw_output);
+    }
+
+    public function version() : string
+    {
+        return 'crc32(' . int2hex($this->polynomial) . ') software version';
     }
 }
