@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 require('crc32.php');
 
-define('duration', 10);    // Duration of test in seconds.
+define('duration', 30);    // Duration of test in seconds.
 define('chunk', 1024 * 8); // Size of chunk to read from disk.
 
 interface Benchmark

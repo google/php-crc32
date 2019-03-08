@@ -2,9 +2,8 @@
 
 by [Andrew Brampton](https://bramp.net)
 
-Simple pure-php CRC implementation. This works in a similar way to PHP's
-[hash functions](https://secure.php.net/manual/en/ref.hash.php) but supports
-all crc32 polynomials, including the useful Castagnoli (`crc32c`).
+Simple CRC32 implementations, that support all crc32 polynomials, as 
+well as (if you compile it) hardware accelerated versions of CRC32C (Castagnoli).
 
 # Usage
 
@@ -16,18 +15,38 @@ $crc->update('hello');
 echo $crc->hash();
 ```
 
+Depending on the environment and the polynomial, `CRC32::create` will choose the fastest available verison, and return one of the following classes:
+
+* `CRC32_PHP` - A pure PHP implementation.
+* `CRC32_Builtin` - A [PHP Hash framework](http://php.net/manual/en/book.hash.php) implementation.
+* `CRC32C_Google` - A Hardware Acceleration implementation.
+
+# Hardware Acceleration
+
+The hardware acceleration version makes use of the highly optomised [google/crc32c](https://github.com/google/crc32c) project, which is compiled into a PHP extension.
+
+You'll need to add `extension=crc32c.so` to your primary php.ini file.
+
+## Compile
+```
+brew install crc32c
+
+./buildconf && \
+./configure --with-crc32c=/Users/bramp/homebrew/Cellar/crc32c/1.0.7/ && \
+make test TESTS=ext/crc32c/tests
+```
+
 # Benchmark
 
-For the `crc32b` polynomials, we can compare the native PHP implementation to this one.
+For the `CRC32C` polynomials, we compare the three different implementations.
 
 ```shell
 $ php crc32_benchmark.php 
 
+TODO
 native: 12.54 MB/s
 purephp: 6.09 MB/s
 ```
-
-Thus this implementation is about twice as slow, however, it lets you use any polynomial.
 
 # Related
 
