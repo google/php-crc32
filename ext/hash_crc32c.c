@@ -45,5 +45,7 @@ const php_hash_ops crc32_ops = {
 	4, /* what to say here? */
 	4,
 	sizeof(PHP_CRC32_CTX),
+#if PHP_API_VERSION >= 20170718
 	0
+#endif
 };

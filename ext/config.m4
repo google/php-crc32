@@ -25,7 +25,7 @@ if test "$PHP_CRC32C" != "no"; then
   
   if test -z "$CRC32C_DIR"; then
     AC_MSG_RESULT([not found])
-    AC_MSG_ERROR([Please reinstall the crc32c distribution])
+    AC_MSG_ERROR([Please install the google/crc32c package])
   fi
 
   # --with-crc32c -> add include path

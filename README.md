@@ -23,17 +23,25 @@ Depending on the environment and the polynomial, `CRC32::create` will choose the
 
 # Hardware Acceleration
 
-The hardware acceleration version makes use of the highly optomised [google/crc32c](https://github.com/google/crc32c) project, which is compiled into a PHP extension.
+This is a PHP extensions which makes use of the [google/crc32c](https://github.com/google/crc32c) project. This project provides a highly optomised `CRC32C` (Castagnoli) implementation using the SSE 4.2 instruction set of Intel CPUs.
 
-You'll need to add `extension=crc32c.so` to your primary php.ini file.
+The extension can be installed from pecl, or compiled from stratch.
+
+```shell
+pecl install crc32c
+```
+
+Once installed or compiled, you'll need to add `extension=crc32c.so` to your php.ini file.
 
 ## Compile
-```
+```shell
+# Install the crc32c library
 brew install crc32c
 
-./buildconf && \
-./configure --with-crc32c=/Users/bramp/homebrew/Cellar/crc32c/1.0.7/ && \
-make test TESTS=ext/crc32c/tests
+cd php-crc/ext
+phpize
+./configure --with-crc32c=/Users/bramp/homebrew/Cellar/crc32c/1.0.7/
+make test
 ```
 
 # Benchmark
