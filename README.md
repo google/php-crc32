@@ -10,7 +10,7 @@ well as (if you compile it) hardware accelerated versions of CRC32C (Castagnoli)
 ```php
 require('crc32.php');
 
-$crc = $crc = CRC32::create(CRC32::CASTAGNOLI);
+$crc = CRC32::create(CRC32::CASTAGNOLI);
 $crc->update('hello');
 echo $crc->hash();
 ```
@@ -49,7 +49,7 @@ make test
 For the `CRC32C` polynomials, we compare the three different implementations.
 
 ```shell
-$ php crc32_benchmark.php 
+$ php -d extension=ext/modules/crc32c.so crc32_benchmark.php
 
 TODO
 native: 12.54 MB/s

@@ -3,86 +3,75 @@ declare(strict_types=1);
 
 require('crc32.php');
 
-define('duration', 30);    // Duration of test in seconds.
-define('chunk', 1024 * 8); // Size of chunk to read from disk.
+define('duration', 10); // Duration of test in seconds.
+define('limit', 1500);  // Max number of iterations.
 
-interface Benchmark
+
+/*
+Tested on my mid-2014 MacBook Pro (with SSE4.2)
+
+Google CRC Benchmarks
+CRC32CBenchmark/Public/256               214 ns          213 ns      3152131 bytes_per_second=1.11688G/s
+CRC32CBenchmark/Public/4096             1975 ns         1974 ns       346883 bytes_per_second=1.9328G/s
+CRC32CBenchmark/Public/65536           31805 ns        31782 ns        21701 bytes_per_second=1.92044G/s
+CRC32CBenchmark/Public/1048576        508704 ns       508373 ns         1312 bytes_per_second=1.92096G/s
+CRC32CBenchmark/Public/16777216      8526064 ns      8516872 ns           78 bytes_per_second=1.83459G/s
+CRC32CBenchmark/Portable/256             363 ns          363 ns      1900480 bytes_per_second=672.139M/s
+CRC32CBenchmark/Portable/4096           4610 ns         4607 ns       150221 bytes_per_second=847.9M/s
+CRC32CBenchmark/Portable/65536         72886 ns        72815 ns         9168 bytes_per_second=858.341M/s
+CRC32CBenchmark/Portable/1048576     1151197 ns      1150417 ns          585 bytes_per_second=869.25M/s
+CRC32CBenchmark/Portable/16777216   18655381 ns     18640083 ns           36 bytes_per_second=858.365M/s
+CRC32CBenchmark/Sse42/256                211 ns          211 ns      3245158 bytes_per_second=1.13004G/s
+CRC32CBenchmark/Sse42/4096              1959 ns         1958 ns       347583 bytes_per_second=1.94816G/s
+CRC32CBenchmark/Sse42/65536            32041 ns        32013 ns        21616 bytes_per_second=1.90658G/s
+CRC32CBenchmark/Sse42/1048576         514282 ns       514035 ns         1296 bytes_per_second=1.8998G/s
+CRC32CBenchmark/Sse42/16777216       8437749 ns      8433051 ns           78 bytes_per_second=1.85283G/s
+
+CRC32_PHP              256       1500      11.48 MB/s
+CRC32_Builtin          256       1500     315.81 MB/s
+CRC32C_Google          256       1500    1078.78 MB/s
+CRC32_PHP             4096       1500      11.65 MB/s
+CRC32_Builtin         4096       1500     457.41 MB/s
+CRC32C_Google         4096       1500   10836.76 MB/s
+CRC32_PHP          1048576        118      12.27 MB/s
+CRC32_Builtin      1048576       1500     468.74 MB/s
+CRC32C_Google      1048576       1500   24684.46 MB/s
+CRC32_PHP         16777216          8      12.24 MB/s
+CRC32_Builtin     16777216        276     461.51 MB/s
+CRC32C_Google     16777216       1500   20221.71 MB/s
+
+*/
+
+function test($crc, $chunk_size)
 {
-    public function init();
-    public function update($buf);
-    public function finish();
-}
-
-class Native implements Benchmark
-{
-    private $crc;
-
-    public function init()
-    {
-        $this->crc = hash_init('crc32b');
-    }
-    public function update($buf)
-    {
-        hash_update($this->crc, $buf);
-    }
-    public function finish()
-    {
-        return hash_final($this->crc);
-    }
-}
-
-class PurePHP implements Benchmark
-{
-    private $crc;
-
-    public function init()
-    {
-        $this->crc = new CRC32(CRC32::IEEE);
-    }
-    public function update($buf)
-    {
-        $this->crc->update($buf);
-    }
-    public function finish()
-    {
-        return $this->crc->hash();
-    }
-}
-
-function test($name, $test)
-{
-    $fp = fopen('/dev/urandom', 'rb');
-    if ($fp === false) {
-        exit("failed to open file");
-    }
-
-    $test->init();
-
     //xdebug_start_trace();
+    $name = get_class($crc);
+    $chunk = random_bytes($chunk_size); // TODO for php 5 use https://github.com/paragonie/random_compat
 
+    $i = 0;
     $now = microtime(true);
     $start = $now;
-    $offset = 0;
 
-    while (($now - $start) < duration) {
-        $buf = fread($fp, chunk);
-        if ($buf === false) {
-            exit("failed to read file");
-        }
+    while (($now - $start) < duration && $i < limit) {
+        $crc->update($chunk);
 
-        $test->update($buf);
-        $offset += strlen($buf);
-
+        $i++;
         $now = microtime(true);
     }
 
-    $test->finish();
+    // Very quick sanity check
+    if ($crc->hash() == '00000000') {
+        exit($name . ' crc check failed');
+    }
 
-    echo sprintf("%s %0.2f MB/s\n", $name, $offset / ($now - $start) / 1000000);
+    $bytes = $i * $chunk_size;
 
-    fclose($fp);
+    echo sprintf("%s\t%10d\t%5d\t%8.2f MB/s\n", $name, $chunk_size, $i, $bytes / ($now - $start) / 1000000);
 }
 
-                                // Tested on my mid-2014 MacBook Pro
-test('native', new Native());   // 12.36 MB/s
-test('purephp', new PurePHP()); // 6.20 MB/s
+foreach (array(256, 4096, 1048576, 16777216) as $chunk_size) {
+    test(new CRC32_PHP(CRC32::CASTAGNOLI), $chunk_size);
+    test(new CRC32_PHP4(CRC32::CASTAGNOLI), $chunk_size);
+    test(new CRC32_Builtin(CRC32::IEEE), $chunk_size); // TODO change to CASTAGNOLI
+    test(new CRC32C_Google(), $chunk_size);
+}
