@@ -1,0 +1,13 @@
+{
+    "name": "bramp/php-crc",
+    "description": "Various CRC32 implementations",
+    "type": "library",
+    "license": "Apache 2",
+    "authors": [
+        {
+            "name": "Andrew Brampton",
+            "email": "bramp@google.com"
+        }
+    ],
+    "require": {}
+}
