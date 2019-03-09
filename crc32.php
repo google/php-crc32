@@ -1,12 +1,7 @@
 <?php
-
-// TODO Allow the classes to be copied
-
-
-
 /**
  * Various CRC32 implementations.
- * 
+ *
  * <code>
  * require 'crc32.php';
  *
@@ -18,22 +13,23 @@
 
 /**
  * CRC calculation interface.
- * 
+ *
  * Lots of great info on the different algorithms used:
  * https://create.stephan-brumme.com/crc32/
  */
-interface CRCInterface {
+interface CRCInterface
+{
     /**
      * Updates the CRC calculation with the supplied data.
      *
      * @param  string  $data  The data
      */
-    function update(string $data);
+    public function update(string $data);
 
     /**
      * Resets the CRC calculation.
      */
-    function reset();
+    public function reset();
 
     /**
      * Return the current calculated CRC hash.
@@ -46,14 +42,14 @@ interface CRCInterface {
      *                 which case the raw binary representation of the CRC is
      *                 returned.
      */
-    function hash(bool $raw_output = false) : string;
+    public function hash(bool $raw_output = false) : string;
 
     /**
      * Returns information about the CRC implementation and polynomial.
      *
-     * @return  string  
+     * @return  string
      */
-    function version() : string;
+    public function version() : string;
 }
 
 // TODO Make sure the following two functions are private!
@@ -73,7 +69,8 @@ function crc_hash($crc, bool $raw_output = false) : string
 }
 
 
-abstract class CRC32 {
+abstract class CRC32
+{
     /**
      * IEEE polynomial as used by ethernet (IEEE 802.3), v.42, fddi, gzip,
      * zip, png, ...
@@ -103,7 +100,7 @@ abstract class CRC32 {
      *
      * @param  integer  $polynomial  The CRC polynomial. Use a 32-bit number,
      *                               or one of the supplied constants, CRC32::IEEE,
-     *                               CRC32::CASTAGNOLI, or CRC32::KOOPMAN. 
+     *                               CRC32::CASTAGNOLI, or CRC32::KOOPMAN.
      *
      * @return  CRC32Interface
      */
@@ -115,19 +112,20 @@ abstract class CRC32 {
 
         if (CRC32_Builtin::supports($polynomial)) {
             return new CRC32_Builtin($polynomial);
-        } 
+        }
 
         // Fallback to the pure PHP version
         return new CRC32_PHP($polynomial);
     }
 
-    static $mapping = array(
+    private static $mapping = array(
         self::IEEE => 'IEEE',
         self::CASTAGNOLI => 'Castagnoli',
         self::KOOPMAN => 'Koopman',
     );
 
-    public static function string(int $polynomial): string {
+    public static function string(int $polynomial): string
+    {
         if (array_key_exists($polynomial, self::$mapping)) {
             return self::$mapping[$polynomial];
         }
@@ -140,12 +138,13 @@ abstract class CRC32 {
  */
 final class CRC32_Builtin implements CRCInterface
 {
-    static $mapping = array(
+    private static $mapping = array(
         CRC32::IEEE => 'crc32b',
         CRC32::CASTAGNOLI => 'crc32c',
     );
 
-    static function supports($polynomial) : bool {
+    public static function supports($polynomial) : bool
+    {
         if (!array_key_exists($polynomial, self::$mapping)) {
             throw new Exception("Unsupported polynomial.");
         }
@@ -185,14 +184,15 @@ final class CRC32_Builtin implements CRCInterface
 }
 
 /**
- * A CRC32 implementation using hardware acceleration. 
- * 
+ * A CRC32 implementation using hardware acceleration.
+ *
  * This uses the C++ https://github.com/google/crc32c library, thus depends on
  * the `crc32c` PHP extension.
  */
 final class CRC32C_Google implements CRCInterface
 {
-    static function supports($algo) : bool {
+    public static function supports($algo) : bool
+    {
         return $algo == CRC32::CASTAGNOLI;
     }
 
@@ -224,7 +224,7 @@ final class CRC32C_Google implements CRCInterface
 
     public function version() : string
     {
-        return 'Hardware accelerated (https://github.com/google/crc32c)'; 
+        return 'Hardware accelerated (https://github.com/google/crc32c)';
     }
 }
 
@@ -232,7 +232,7 @@ final class CRC32Table
 {
     private static $tables = array();
 
-    static function print(array $table)
+    public static function print(array $table)
     {
         foreach ($table as $i => $value) {
             echo "0x" . int2hex($value) . ",";
@@ -246,7 +246,7 @@ final class CRC32Table
         echo "\n\n";
     }
 
-    static function get(int $polynomial) : array
+    public static function get(int $polynomial) : array
     {
         if (array_key_exists($polynomial, self::$tables)) {
             return self::$tables[$polynomial];
@@ -262,7 +262,7 @@ final class CRC32Table
      *
      * @return  array  The table.
      */
-    static function create(int $polynomial) : array
+    public static function create(int $polynomial) : array
     {
         $table = array_fill(0, 256, 0);
 
@@ -288,7 +288,7 @@ final class CRC32Table
      *
      * @return  array  The table.
      */
-    static function create4(int $polynomial) : array
+    public static function create4(int $polynomial) : array
     {
         $table = array_fill(0, 4, array_fill(0, 256, 0));
         $table[0] = self::create($polynomial);
@@ -313,12 +313,13 @@ final class CRC32Table
 
 /**
  * PHP implementation of the CRC32 algorithm.
- * 
+ *
  * Uses a simple lookup table to improve the performances.
  */
 final class CRC32_PHP implements CRCInterface
 {
-    static function supports($algo) : bool {
+    public static function supports($algo) : bool
+    {
         return true;
     }
 
@@ -366,13 +367,14 @@ final class CRC32_PHP implements CRCInterface
 
 /**
  * PHP implementation of the CRC32 sliced-by-4 algorithm.
- * 
- * This is typically faster, but the PHP implementation seems slower than the 
+ *
+ * This is typically faster, but the PHP implementation seems slower than the
  * simple implementation.
  */
 final class CRC32_PHP4 implements CRCInterface
 {
-    static function supports($algo) : bool {
+    public static function supports($algo) : bool
+    {
         return true;
     }
 
@@ -410,7 +412,7 @@ final class CRC32_PHP4 implements CRCInterface
             $crc = ($crc ^ $b) & 0xffffffff;
 
             $crc = $table3[ $crc      & 0xff] ^
-                   $table2[($crc>>8 ) & 0xff] ^
+                   $table2[($crc>>8) & 0xff] ^
                    $table1[($crc>>16) & 0xff] ^
                    $table0[($crc>>24) & 0xff];
         }

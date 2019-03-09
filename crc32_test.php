@@ -82,8 +82,9 @@ foreach ($crcs as $crc_class) {
 
             // Extended hashing
             // Read increasingly sized chunks of input.
-            $start = 0; $len = 1;
-            while($start < strlen($input)) {
+            $start = 0;
+            $len = 1;
+            while ($start < strlen($input)) {
                 $chunk = substr($input, $start, $len);
                 $crc->update($chunk);
 
@@ -98,7 +99,6 @@ foreach ($crcs as $crc_class) {
             }
 
             $crc->reset();
-
         }
 
         if ($ok) {

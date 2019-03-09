@@ -63,6 +63,10 @@ purephp: 6.09 MB/s
 # TODO
 
 [ ] Test if this works on 32 bit machine.
+[ ] Allow the CRC32 classes to be copied.
+[ ] Publish to packagist
+
+
 
 # Licence (Apache 2)
 
