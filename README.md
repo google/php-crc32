@@ -51,9 +51,10 @@ For the `CRC32C` polynomials, we compare the three different implementations.
 ```shell
 $ php -d extension=ext/modules/crc32c.so crc32_benchmark.php
 
-TODO
-native: 12.54 MB/s
-purephp: 6.09 MB/s
+# Reading 1048576 byte chunks
+CRC32_PHP          12.27 MB/s (using )
+CRC32_Builtin     468.74 MB/s (using php hash())
+CRC32C_Google   24684.46 MB/s (using the crc32c.so)
 ```
 
 # Related
@@ -65,7 +66,7 @@ purephp: 6.09 MB/s
 [ ] Test if this works on 32 bit machine.
 [ ] Allow the CRC32 classes to be copied.
 [ ] Publish to packagist
-
+[ ] Test on all PHP versions
 
 
 # Licence (Apache 2)

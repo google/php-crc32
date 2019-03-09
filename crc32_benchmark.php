@@ -72,6 +72,8 @@ function test($crc, $chunk_size)
 foreach (array(256, 4096, 1048576, 16777216) as $chunk_size) {
     test(new CRC32_PHP(CRC32::CASTAGNOLI), $chunk_size);
     test(new CRC32_PHP4(CRC32::CASTAGNOLI), $chunk_size);
-    test(new CRC32_Builtin(CRC32::IEEE), $chunk_size); // TODO change to CASTAGNOLI
+
+    // Using IEEE, avoiding the CASTAGNOLI version crc32c.so adds.
+    test(new CRC32_Builtin(CRC32::IEEE), $chunk_size);
     test(new CRC32C_Google(), $chunk_size);
 }
