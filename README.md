@@ -2,8 +2,10 @@
 
 by [Andrew Brampton](https://bramp.net)
 
-Simple CRC32 implementations, that support all crc32 polynomials, as 
-well as (if you compile it) hardware accelerated versions of CRC32C (Castagnoli).
+CRC32 implementations, that support all crc32 polynomials, as well as (if you
+compile it) hardware accelerated versions of CRC32C (Castagnoli).
+
+Supports PHP 5.6 though PHP 7.6.
 
 # Usage
 
@@ -15,15 +17,27 @@ $crc->update('hello');
 echo $crc->hash();
 ```
 
-Depending on the environment and the polynomial, `CRC32::create` will choose the fastest available verison, and return one of the following classes:
+Depending on the environment and the polynomial, `CRC32::create` will choose
+the fastest available verison, and return one of the following classes:
 
 * `CRC32_PHP` - A pure PHP implementation.
 * `CRC32_Builtin` - A [PHP Hash framework](http://php.net/manual/en/book.hash.php) implementation.
-* `CRC32C_Google` - A Hardware Acceleration implementation.
+* `CRC32C_Google` - A hardware accelerated implementation (using [google/crc32c](https://github.com/google/crc32c)).
+
+When reading 1M byte chunks, using `CRC32C` on a 2014 Macbook Pro we get the following performance (higher is better):
+
+```
+CRC32_PHP           12.27 MB/s
+CRC32_Builtin      468.74 MB/s (available since PHP 7.4)
+CRC32C_Google   24,684.46 MB/s (using crc32c.so)
+```
+
+TODO composer install...
+TODO pecl install...
 
 # Hardware Acceleration
 
-This is a PHP extensions which makes use of the [google/crc32c](https://github.com/google/crc32c) project. This project provides a highly optomised `CRC32C` (Castagnoli) implementation using the SSE 4.2 instruction set of Intel CPUs.
+To use the hardware accelerated, a custom PHP extension must be installed. This makes use of [google/crc32c](https://github.com/google/crc32c) which provides a highly optomised `CRC32C` (Castagnoli) implementation using the SSE 4.2 instruction set of Intel CPUs.
 
 The extension can be installed from pecl, or compiled from stratch.
 
@@ -35,27 +49,26 @@ Once installed or compiled, you'll need to add `extension=crc32c.so` to your php
 
 ## Compile
 ```shell
-# Install the crc32c library
+# Install the google/crc32c library
 brew install crc32c
 
 cd php-crc/ext
 phpize
-./configure --with-crc32c=/Users/bramp/homebrew/Cellar/crc32c/1.0.7/
+./configure --with-crc32c=$(brew --prefix crc32c)
+
 make test
+
+# The extension will now be at ext/modules/crc32c.so
 ```
 
-# Benchmark
+## Testing
 
-For the `CRC32C` polynomials, we compare the three different implementations.
+`make test` will test with the current PHP. `make test_all` will search for available
+PHP installs, and test with all of them.
 
-```shell
-$ php -d extension=ext/modules/crc32c.so crc32_benchmark.php
+## Benchmark
 
-# Reading 1048576 byte chunks
-CRC32_PHP          12.27 MB/s (using )
-CRC32_Builtin     468.74 MB/s (using php hash())
-CRC32C_Google   24684.46 MB/s (using the crc32c.so)
-```
+To compare the performance of the different `CRC32C` implementations, run `make benchmark`.
 
 # Related
 
@@ -66,7 +79,8 @@ CRC32C_Google   24684.46 MB/s (using the crc32c.so)
 [ ] Test if this works on 32 bit machine.
 [ ] Allow the CRC32 classes to be copied.
 [ ] Publish to packagist
-[ ] Test on all PHP versions
+[ ] Publish to pecl (https://pecl.php.net/account-request.php)
+[ ] Update instructions for linux.
 
 
 # Licence (Apache 2)

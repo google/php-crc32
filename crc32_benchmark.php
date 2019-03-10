@@ -1,10 +1,12 @@
 <?php
-declare(strict_types=1);
-
 require('crc32.php');
 
-define('duration', 10); // Duration of test in seconds.
-define('limit', 1500);  // Max number of iterations.
+//require ('vendor/autoload.php');
+require('vendor/paragonie/random_compat/lib/random.php');
+
+define('min_duration', 5);       // Min duration of test in seconds.
+define('max_duration', 30);      // Max duration of test in seconds.
+define('min_iterations', 10000); // Min number of iterations.
 
 
 /*
@@ -51,18 +53,28 @@ function test($crc, $chunk_size)
     $i = 0;
     $now = microtime(true);
     $start = $now;
+    $duration = 0;
 
-    while (($now - $start) < duration && $i < limit) {
+    while (true) {
         $crc->update($chunk);
 
         $i++;
         $now = microtime(true);
+        $duration = ($now - $start);
+
+        if ($duration >= max_duration) {
+            break;
+        }
+        if ($duration >= min_duration && $i >= min_iterations) {
+            break;
+        }
     }
 
     // Very quick sanity check
     if ($crc->hash() == '00000000') {
         exit($name . ' crc check failed');
     }
+
 
     $bytes = $i * $chunk_size;
 

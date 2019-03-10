@@ -9,5 +9,8 @@
             "email": "bramp@google.com"
         }
     ],
-    "require": {}
+    "require": {},
+    "require-dev": {
+        "paragonie/random_compat": ">=2"
+    }
 }

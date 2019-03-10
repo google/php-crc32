@@ -24,7 +24,7 @@ interface CRCInterface
      *
      * @param  string  $data  The data
      */
-    public function update(string $data);
+    public function update($data);
 
     /**
      * Resets the CRC calculation.
@@ -42,24 +42,43 @@ interface CRCInterface
      *                 which case the raw binary representation of the CRC is
      *                 returned.
      */
-    public function hash(bool $raw_output = false) : string;
+    public function hash($raw_output = null);
 
     /**
      * Returns information about the CRC implementation and polynomial.
      *
      * @return  string
      */
-    public function version() : string;
+    public function version();
 }
 
 // TODO Make sure the following two functions are private!
 
-function int2hex($i) : string
+/**
+ * Converts a integer into a 8 character hex string in lower case.
+ *
+ * @param  integer  $i  Integer to convert.
+ *
+ * @return  string 8 character hex string in lower case.
+ */
+function int2hex($i)
 {
     return str_pad(dechex($i), 8, '0', STR_PAD_LEFT);
 }
 
-function crc_hash($crc, bool $raw_output = false) : string
+/**
+ * { function_description }
+ *
+ * @param  integer  $crc  The CRC hash
+ * @param  boolean  $raw_output  When set to TRUE, outputs raw binary data.
+ *                               FALSE outputs lowercase hexits.
+ *
+ * @return string  Returns a string containing the calculated CRC as
+ *                 lowercase hexits unless raw_output is set to true in
+ *                 which case the raw binary representation of the CRC is
+ *                 returned.
+ */
+function crc_hash($crc, $raw_output)
 {
     $crc = $crc & 0xffffffff;
     if ($raw_output) {
@@ -104,7 +123,7 @@ abstract class CRC32
      *
      * @return  CRC32Interface
      */
-    public static function create(int $polynomial) : CRC32Interface
+    public static function create($polynomial)
     {
         if (CRC32C_Google::supports($polynomial)) {
             return new CRC32C_Google();
@@ -124,7 +143,14 @@ abstract class CRC32
         self::KOOPMAN => 'Koopman',
     );
 
-    public static function string(int $polynomial): string
+    /**
+     * Prints the human friendly name for this polynomial.
+     *
+     * @param  integer  $polynomial  The CRC polynomial.
+     *
+     * @return  string
+     */
+    public static function string($polynomial)
     {
         if (array_key_exists($polynomial, self::$mapping)) {
             return self::$mapping[$polynomial];
@@ -143,19 +169,26 @@ final class CRC32_Builtin implements CRCInterface
         CRC32::CASTAGNOLI => 'crc32c',
     );
 
-    public static function supports($polynomial) : bool
+    /**
+     * Returns true if this $polynomial is supported by the builtin PHP hash function.
+     *
+     * @param  integer  $polynomial  The polynomial
+     *
+     * @return  boolean
+     */
+    public static function supports($polynomial)
     {
         if (!array_key_exists($polynomial, self::$mapping)) {
-            throw new Exception("Unsupported polynomial.");
+            return false;
         }
         $algo = self::$mapping[$polynomial];
         return in_array($algo, hash_algos());
     }
 
-    public function __construct(int $polynomial)
+    public function __construct($polynomial)
     {
         if (!self::supports($polynomial)) {
-            throw new Exception("Unsupported polynomial.");
+            throw new Exception("hash_algos() does not list this polynomial.");
         }
 
         $this->algo = self::$mapping[$polynomial];
@@ -167,17 +200,17 @@ final class CRC32_Builtin implements CRCInterface
         $this->hc = hash_init($this->algo);
     }
 
-    public function update(string $data)
+    public function update($data)
     {
         hash_update($this->hc, $data);
     }
 
-    public function hash(bool $raw_output = false) : string
+    public function hash($raw_output = null)
     {
         return hash_final($this->hc, $raw_output);
     }
 
-    public function version() : string
+    public function version()
     {
         return $this->algo . ' PHP HASH';
     }
@@ -191,7 +224,7 @@ final class CRC32_Builtin implements CRCInterface
  */
 final class CRC32C_Google implements CRCInterface
 {
-    public static function supports($algo) : bool
+    public static function supports($algo)
     {
         return $algo == CRC32::CASTAGNOLI;
     }
@@ -199,7 +232,7 @@ final class CRC32C_Google implements CRCInterface
     public function __construct()
     {
         if (!function_exists('crc32c')) {
-            throw new Exception("Please load the 'crc32c' extension.");
+            throw new Exception("crc32c function not found. Please load the 'crc32c' extension.");
         }
         $this->reset();
     }
@@ -209,20 +242,20 @@ final class CRC32C_Google implements CRCInterface
         $this->crc = hex2bin('00000000');
     }
 
-    public function update(string $data)
+    public function update($data)
     {
         $this->crc = crc32c($data, $this->crc);
     }
 
-    public function hash(bool $raw_output = false) : string
+    public function hash($raw_output = null)
     {
-        if ($raw_output) {
+        if ($raw_output === true) {
             return $this->crc;
         }
         return bin2hex($this->crc);
     }
 
-    public function version() : string
+    public function version()
     {
         return 'Hardware accelerated (https://github.com/google/crc32c)';
     }
@@ -232,7 +265,12 @@ final class CRC32Table
 {
     private static $tables = array();
 
-    public static function print(array $table)
+    /**
+     * Echos the given table. Useful for building a static table to include in source code.
+     *
+     * @param      array  $table  The table
+     */
+    public static function output(array $table)
     {
         foreach ($table as $i => $value) {
             echo "0x" . int2hex($value) . ",";
@@ -246,7 +284,14 @@ final class CRC32Table
         echo "\n\n";
     }
 
-    public static function get(int $polynomial) : array
+    /**
+     * Gets a CRC table, by creating it, or using a previously cached result.
+     *
+     * @param  integer  $polynomial  The polynomial
+     *
+     * @return  array  The table
+     */
+    public static function get($polynomial)
     {
         if (array_key_exists($polynomial, self::$tables)) {
             return self::$tables[$polynomial];
@@ -262,7 +307,7 @@ final class CRC32Table
      *
      * @return  array  The table.
      */
-    public static function create(int $polynomial) : array
+    public static function create($polynomial)
     {
         $table = array_fill(0, 256, 0);
 
@@ -288,7 +333,7 @@ final class CRC32Table
      *
      * @return  array  The table.
      */
-    public static function create4(int $polynomial) : array
+    public static function create4($polynomial)
     {
         $table = array_fill(0, 4, array_fill(0, 256, 0));
         $table[0] = self::create($polynomial);
@@ -318,7 +363,7 @@ final class CRC32Table
  */
 final class CRC32_PHP implements CRCInterface
 {
-    public static function supports($algo) : bool
+    public static function supports($algo)
     {
         return true;
     }
@@ -326,11 +371,11 @@ final class CRC32_PHP implements CRCInterface
     private $table = array();
 
     /**
-     * Creates a new instance for the particular polynomial.
+     * Creates a new instance for this polynomial.
      *
-     * @param      integer  $polynomial  The polynomial
+     * @param  integer  $polynomial  The polynomial
      */
-    public function __construct(int $polynomial)
+    public function __construct($polynomial)
     {
         $this->polynomial = $polynomial;
         $this->table = CRC32Table::get($polynomial);
@@ -343,7 +388,7 @@ final class CRC32_PHP implements CRCInterface
         $this->crc = ~0;
     }
 
-    public function update(string $data)
+    public function update($data)
     {
         $crc = $this->crc;
         $table = $this->table;
@@ -354,12 +399,12 @@ final class CRC32_PHP implements CRCInterface
         $this->crc = $crc;
     }
 
-    public function hash(bool $raw_output = false) : string
+    public function hash($raw_output = null)
     {
-        return crc_hash(~$this->crc, $raw_output);
+        return crc_hash(~$this->crc, $raw_output === true);
     }
 
-    public function version() : string
+    public function version()
     {
         return 'crc32(' . int2hex($this->polynomial) . ') software version';
     }
@@ -373,14 +418,14 @@ final class CRC32_PHP implements CRCInterface
  */
 final class CRC32_PHP4 implements CRCInterface
 {
-    public static function supports($algo) : bool
+    public static function supports($algo)
     {
         return true;
     }
 
     private $table;
 
-    public function __construct(int $polynomial)
+    public function __construct($polynomial)
     {
         $this->polynomial = $polynomial;
         $this->table = CRC32Table::create4($polynomial);
@@ -392,7 +437,7 @@ final class CRC32_PHP4 implements CRCInterface
         $this->crc = ~0;
     }
 
-    public function update(string $data)
+    public function update($data)
     {
         $crc = $this->crc;
         $table0 = $this->table[0];
@@ -436,12 +481,12 @@ final class CRC32_PHP4 implements CRCInterface
         $this->crc = $crc;
     }
 
-    public function hash(bool $raw_output = false) : string
+    public function hash($raw_output = null)
     {
-        return crc_hash(~$this->crc, $raw_output);
+        return crc_hash(~$this->crc, $raw_output === true);
     }
 
-    public function version() : string
+    public function version()
     {
         return 'crc32(' . int2hex($this->polynomial) . ') software version';
     }

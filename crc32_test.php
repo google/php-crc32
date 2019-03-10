@@ -1,9 +1,7 @@
 <?php
-declare(strict_types=1);
-
 require('crc32.php');
 
-$crcs = array(CRC32_PHP, CRC32_PHP4, CRC32_Builtin, CRC32C_Google);
+$crcs = array('CRC32_PHP', 'CRC32_PHP4', 'CRC32_Builtin', 'CRC32C_Google');
 $algos = array(CRC32::IEEE, CRC32::CASTAGNOLI);
 
 /**

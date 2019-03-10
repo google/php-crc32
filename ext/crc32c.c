@@ -25,11 +25,18 @@ PHP_FUNCTION(crc32c)
 	char *crc_arg = NULL;
 	size_t crc_len = 0;
 
+#if PHP_API_VERSION >= 20151012 /* >= PHP 7.0 */
+	// fast_zpp is a faster way to parse paramters.
 	ZEND_PARSE_PARAMETERS_START(1, 2)
 		Z_PARAM_STRING(data_arg, data_len)
 		Z_PARAM_OPTIONAL
-		Z_PARAM_STRING_EX(crc_arg, crc_len, 1, 0)
+		Z_PARAM_STRING_EX(crc_arg, crc_len, /* check_null */ 1, 0)
 	ZEND_PARSE_PARAMETERS_END_EX(RETURN_FALSE);
+#else
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|s!", &data_arg, &data_len, &crc_arg, &crc_len) == FAILURE) {
+		RETURN_BOOL(false);
+	}
+#endif
 
 	uint32_t crc = 0;
 
@@ -37,7 +44,7 @@ PHP_FUNCTION(crc32c)
 		crc = byte2int((unsigned char *)crc_arg);
 
 	} else if (crc_arg != NULL) {
-		zend_error(E_WARNING, "crc32c(): Supplied crc must be exactly 4 bytes");
+		zend_error(E_WARNING, "crc32c(): Supplied crc must be a 4 byte string");
 		RETURN_BOOL(false);
 	}
 
@@ -46,7 +53,11 @@ PHP_FUNCTION(crc32c)
 	unsigned char hash[4];
 	int2byte(crc, hash);
 
+#if PHP_API_VERSION >= 20151012 /* >= PHP 7.0 */
 	RETURN_STRINGL((const char *)hash, sizeof(hash));
+#else
+	RETURN_STRINGL((const char *)hash, sizeof(hash), /* dup */ 1);
+#endif
 }
 /* }}}*/
 
