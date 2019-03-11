@@ -24,7 +24,7 @@ the fastest available verison, and return one of the following classes:
 * `CRC32_Builtin` - A [PHP Hash framework](http://php.net/manual/en/book.hash.php) implementation.
 * `CRC32C_Google` - A hardware accelerated implementation (using [google/crc32c](https://github.com/google/crc32c)).
 
-When reading 1M byte chunks, using `CRC32C` on a 2014 Macbook Pro we get the following performance (higher is better):
+When reading 1M byte chunks, using `CRC32::CASTAGNOLI` with PHP 7.4 on a 2014 Macbook Pro we get the following performance (higher is better):
 
 ```
 CRC32_PHP           12.27 MB/s
@@ -32,10 +32,13 @@ CRC32_Builtin      468.74 MB/s (available since PHP 7.4)
 CRC32C_Google   24,684.46 MB/s (using crc32c.so)
 ```
 
+# Install
+
 TODO composer install...
+
 TODO pecl install...
 
-# Hardware Acceleration
+# crc32c.so
 
 To use the hardware accelerated, a custom PHP extension must be installed. This makes use of [google/crc32c](https://github.com/google/crc32c) which provides a highly optomised `CRC32C` (Castagnoli) implementation using the SSE 4.2 instruction set of Intel CPUs.
 
@@ -57,8 +60,13 @@ phpize
 ./configure --with-crc32c=$(brew --prefix crc32c)
 
 make test
+```
 
-# The extension will now be at ext/modules/crc32c.so
+The extension will now be at `ext/modules/crc32c.so`. This file should be copied to your [extension directory](https://php.net/extension-dir) and reference in your php.ini.
+
+```
+# php.ini
+extension=crc32c.so
 ```
 
 ## Testing
