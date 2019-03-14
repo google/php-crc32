@@ -230,6 +230,11 @@ final class CRC32_Builtin implements CRCInterface
     {
         return $this->algo . ' PHP HASH';
     }
+
+    public function __clone()
+    {
+        $this->hc = hash_copy($this->hc);
+    }
 }
 
 /**
