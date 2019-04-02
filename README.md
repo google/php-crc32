@@ -84,16 +84,16 @@ To compare the performance of the different `CRC32C` implementations, run `make 
 
 # TODO
 
-[ ] Test if this works on 32 bit machine.
-[ ] Add php unit (or similar) testing.
-[ ] Publish to packagist
-[ ] Publish to pecl (https://pecl.php.net/account-request.php)
-[ ] Update instructions for linux.
+- [ ] Test if this works on 32 bit machine.
+- [ ] Add php unit (or similar) testing.
+- [ ] Publish to packagist
+- [ ] Publish to pecl (https://pecl.php.net/account-request.php)
+- [ ] Update instructions for linux.
 
 
 # Licence (Apache 2)
 
-* This is not an official Google product (experimental or otherwise), it is just code that happens to be owned by Google. *
+*This is not an official Google product (experimental or otherwise), it is just code that happens to be owned by Google.*
 
 ```
 Copyright 2019 Google Inc. All Rights Reserved.
