@@ -115,13 +115,13 @@ abstract class CRC32
     /**
      * Castagnoli's polynomial, used in iSCSI, SCTP, Google Cloud Storage,
      * Apache Kafka, and has hardware-accelerated in modern intel CPUs.
-     * https://dx.doi.org/10.1109/26.231911
+     * https://doi.org/10.1109/26.231911
      */
     const CASTAGNOLI = 0x82f63b78;
 
     /**
      * Koopman's polynomial.
-     * https://dx.doi.org/10.1109/DSN.2002.1028931
+     * https://doi.org/10.1109/DSN.2002.1028931
      */
     const KOOPMAN = 0xeb31d82e;
 
