@@ -42,7 +42,7 @@ PHP_HASH_API void CRC32CUpdate(PHP_CRC32_CTX *context, const unsigned char *inpu
 	context->state = crc32c_extend(context->state, input, len);
 }
 
-PHP_HASH_API void CRC32CFinal(unsigned char crc[4], PHP_CRC32_CTX *context)
+PHP_HASH_API void CRC32CFinal(uint8_t crc[4], PHP_CRC32_CTX *context)
 {
 	int2byte(context->state, crc);
 	context->state = 0;

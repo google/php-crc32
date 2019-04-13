@@ -57,7 +57,7 @@ PHP_FUNCTION(crc32c)
 	uint32_t crc = 0;
 
 	if (crc_len == 4) {
-		crc = byte2int((unsigned char *)crc_arg);
+		crc = byte2int((uint8_t *)crc_arg);
 
 	} else if (crc_arg != NULL) {
 		zend_error(E_WARNING, "crc32c(): Supplied crc must be a 4 byte string");
@@ -66,7 +66,7 @@ PHP_FUNCTION(crc32c)
 
 	crc = crc32c_extend(crc, (const uint8_t *)data_arg, data_len);
 
-	unsigned char hash[4];
+	uint8_t hash[4];
 	int2byte(crc, hash);
 
 #if PHP_API_VERSION >= 20151012 /* >= PHP 7.0 */
