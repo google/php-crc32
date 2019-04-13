@@ -1,4 +1,5 @@
 #!/bin/sh
+# Used to build and install the google/crc32c library.
 
 ##
 # Copyright 2019 Google Inc. All Rights Reserved.
@@ -17,10 +18,16 @@
 ##
 
 git clone https://github.com/google/crc32c
+
 cd crc32c
 git submodule update --init --recursive
 
 mkdir build
 cd build
-cmake -DCRC32C_BUILD_TESTS=0 -DCRC32C_BUILD_BENCHMARKS=0 ..
-make all install
+cmake -DCRC32C_BUILD_TESTS=0 \
+      -DCRC32C_BUILD_BENCHMARKS=0 \
+      -DCRC32C_USE_GLOG=0 \
+      -DBUILD_SHARED_LIBS=0 \
+      -DCMAKE_INSTALL_PREFIX:PATH=$PWD \
+      ..
+cmake --build . --target install

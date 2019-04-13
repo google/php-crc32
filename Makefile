@@ -24,9 +24,6 @@ PHP ?= $(PHP_BIN)/php
 PHP_CONFIG ?= $(PHP_BIN)/php-config
 PHPIZE ?= $(PHP_BIN)/phpize
 
-# This assumes the use of homebrew. TODO make generic.
-CRC32C_DIR ?= $$(brew --prefix crc32c)
-
 all: lint test
 
 clean:
@@ -35,14 +32,8 @@ clean:
 
 vendor: composer.lock
 composer.lock: composer.json
-	$(COMPOSER) install
+	$(COMPOSER) update
 	touch composer.lock
-
-fix: vendor
-	$(PHP_CS_FIXER) fix crc32.php
-	$(PHP_CS_FIXER) fix crc32_benchmark.php
-	$(PHP_CS_FIXER) fix crc32_test.php
-	$(PHP_CS_FIXER) fix ext/tests
 
 lint: vendor
 	$(PHP_CS_FIXER) fix --dry-run --diff crc32.php
@@ -72,8 +63,8 @@ ext_test: ext
 
 ext/modules/crc32c.so: ext/crc32c.c ext/hash_crc32c.c ext/php_crc32c.h
 	cd ext && \
+	./install_crc32c.sh && \
 	$(PHPIZE) && \
 	./configure \
-	  --with-crc32c=$(CRC32C_DIR) \
 	  --with-php-config=$(PHP_CONFIG) && \
-	$(MAKE) clean && $(MAKE)
+	$(MAKE)

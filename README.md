@@ -54,13 +54,23 @@ Once installed or compiled, you'll need to add `extension=crc32c.so` to your php
 
 ## Compile
 ```shell
-# Install the google/crc32c library
-brew install crc32c
+cd ext
 
-cd php-crc/ext
+## Install the google/crc32c library
+
+./install_crc32c.sh # From source (recommended)
+
+# or use your favorite package manager, e.g.
+# brew install crc32c
+
+## Prepare the build environment
 phpize
-./configure --with-crc32c=$(brew --prefix crc32c)
+./configure
 
+# or if using a custom crc32c
+# ./configure --with-crc32c=$(brew --prefix crc32c)
+
+## Build and test
 make test
 ```
 
