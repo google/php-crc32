@@ -1,6 +1,7 @@
 {
-    "name": "bramp/php-crc",
+    "name": "google/php-crc32",
     "description": "Various CRC32 implementations",
+    "homepage": "https://github.com/google/php-crc32",
     "type": "library",
     "license": "Apache 2",
     "authors": [
@@ -9,8 +10,11 @@
             "email": "bramp@google.com"
         }
     ],
-    "require": {},
+    "require": {
+        "php": ">=5.4"
+    },
     "require-dev": {
-        "paragonie/random_compat": ">=2"
+        "paragonie/random_compat": ">=2",
+        "friendsofphp/php-cs-fixer": "^2.14"
     }
 }
