@@ -28,6 +28,7 @@ cmake -DCRC32C_BUILD_TESTS=0 \
       -DCRC32C_BUILD_BENCHMARKS=0 \
       -DCRC32C_USE_GLOG=0 \
       -DBUILD_SHARED_LIBS=0 \
+      -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
       -DCMAKE_INSTALL_PREFIX:PATH=$PWD \
       ..
 cmake --build . --target install
