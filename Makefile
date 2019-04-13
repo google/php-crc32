@@ -14,7 +14,7 @@
 # limitations under the License.
 ##
 
-.PHONY : all clean benchmark test test_all lint ext
+.PHONY : all clean benchmark test test_all lint ext ext_test
 
 COMPOSER ?= composer
 PHP_CS_FIXER ?= php-cs-fixer
@@ -59,10 +59,13 @@ lint:
 
 ext: ext/modules/crc32c.so
 
+ext_test: ext
+	NO_INTERACTION=1 $(MAKE) -C ext test
+
 ext/modules/crc32c.so: ext/crc32c.c ext/hash_crc32c.c ext/php_crc32c.h
 	cd ext && \
 	$(PHPIZE) && \
 	./configure \
 	  --with-crc32c=$(CRC32C_DIR) \
-	  --with-php-config=$(PHP_CONFIG)
-	$(MAKE) -C ext test
+	  --with-php-config=$(PHP_CONFIG) && \
+	$(MAKE) clean && $(MAKE)
