@@ -3,7 +3,7 @@ crc32c() extend tests
 --SKIPIF--
 <?php
 if (!extension_loaded('crc32c')) {
-	echo 'skip';
+    echo 'skip';
 }
 ?>
 --FILE--

@@ -3,7 +3,7 @@ crc32c() is loadable
 --SKIPIF--
 <?php
 if (!extension_loaded('crc32c')) {
-	echo 'skip';
+    echo 'skip';
 }
 ?>
 --FILE--

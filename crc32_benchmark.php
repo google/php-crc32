@@ -17,7 +17,7 @@
 
 require('crc32.php');
 
-require ('vendor/autoload.php');
+require('vendor/autoload.php');
 
 define('min_duration', 5);       // Min duration of test in seconds.
 define('max_duration', 30);      // Max duration of test in seconds.

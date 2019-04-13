@@ -3,13 +3,14 @@ crc32c() basic tests
 --SKIPIF--
 <?php
 if (!extension_loaded('crc32c')) {
-	echo 'skip';
+    echo 'skip';
 }
 ?>
 --FILE--
 <?php
-function h($str) {
-	return bin2hex(crc32c($str));
+function h($str)
+{
+    return bin2hex(crc32c($str));
 }
 
 echo h(''), "\n";
