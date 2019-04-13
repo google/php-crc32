@@ -17,7 +17,7 @@
 .PHONY : all clean benchmark test test_all lint ext ext_test
 
 COMPOSER ?= composer
-PHP_CS_FIXER ?= php-cs-fixer
+PHP_CS_FIXER ?= vendor/bin/php-cs-fixer
 
 PHP_BIN ?= $(shell php-config --prefix)/bin
 PHP ?= $(PHP_BIN)/php
