@@ -1,5 +1,7 @@
 # php-crc32
 
+[![Build Status](https://travis-ci.org/google/php-crc32.svg?branch=master)](https://travis-ci.org/google/php-crc32)
+
 by [Andrew Brampton](https://bramp.net)
 
 CRC32 implementations, that support all crc32 polynomials, as well as (if you

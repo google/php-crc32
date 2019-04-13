@@ -33,29 +33,37 @@ clean:
 	-rm -r .php_cs.cache
 	$(MAKE) -C ext clean
 
-benchmark: ext vendor
-	$(PHP) -d extension=ext/modules/crc32c.so crc32_benchmark.php
-
 vendor: composer.lock
 composer.lock: composer.json
 	$(COMPOSER) install
 	touch composer.lock
 
-test: ext
+fix: vendor
+	$(PHP_CS_FIXER) fix crc32.php
+	$(PHP_CS_FIXER) fix crc32_benchmark.php
+	$(PHP_CS_FIXER) fix crc32_test.php
+	$(PHP_CS_FIXER) fix ext/tests
+
+lint: vendor
+	$(PHP_CS_FIXER) fix --dry-run --diff crc32.php
+	$(PHP_CS_FIXER) fix --dry-run --diff crc32_benchmark.php
+	$(PHP_CS_FIXER) fix --dry-run --diff crc32_test.php
+	$(PHP_CS_FIXER) fix --dry-run --diff ext/tests
+
+benchmark: ext vendor
+	$(PHP) -d extension=ext/modules/crc32c.so crc32_benchmark.php
+
+test: ext vendor
 	$(PHP) -v
 	$(PHP) -d extension=ext/modules/crc32c.so crc32_test.php
 
+# Test all the local versions of PHP
 test_all:
 	for phpize in $$(ls $$(brew --prefix)/Cellar/php*/*/bin/phpize); do \
 	  NO_INTERACTION=1 \
 	  PHP_BIN=$$(dirname $$phpize) \
 	  $(MAKE) clean test; \
 	done
-
-lint:
-	$(PHP_CS_FIXER) fix crc32.php
-	$(PHP_CS_FIXER) fix crc32_benchmark.php
-	$(PHP_CS_FIXER) fix crc32_test.php
 
 ext: ext/modules/crc32c.so
 
