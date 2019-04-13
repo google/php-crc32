@@ -24,9 +24,6 @@ matrix:
 os:
   - linux
 
-before_install:
-  - composer self-update --prefer-lowest
-
 install:
   - composer update
 
