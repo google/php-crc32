@@ -1,7 +1,0 @@
-ARG_ENABLE('crc32c', 'crc32c support', 'no');
-
-if (PHP_CRC32C != 'no') {
-	AC_DEFINE('HAVE_CRC32C', 1, 'crc32c support enabled');
-
-	EXTENSION('crc32c', 'crc32c.c hash_crc32c.c', null, '/DZEND_ENABLE_STATIC_TSRMLS_CACHE=1');
-}

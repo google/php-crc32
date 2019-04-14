@@ -5,7 +5,7 @@
 by [Andrew Brampton](https://bramp.net)
 
 CRC32 implementations, that support all crc32 polynomials, as well as (if you
-compile it) hardware accelerated versions of CRC32C (Castagnoli).
+install the pecl extension) hardware accelerated versions of CRC32C (Castagnoli).
 
 Supports PHP 5.6 though PHP 7.6.
 
@@ -52,7 +52,7 @@ pecl install crc32c
 
 Once installed or compiled, you'll need to add `extension=crc32c.so` to your php.ini file.
 
-## Compile
+## Compile (Linux / Mac)
 ```shell
 cd ext
 
