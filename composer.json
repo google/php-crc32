@@ -1,5 +1,5 @@
 {
-    "name": "google/php-crc32",
+    "name": "google/crc32",
     "description": "Various CRC32 implementations",
     "homepage": "https://github.com/google/php-crc32",
     "type": "library",
