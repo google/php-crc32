@@ -3,7 +3,7 @@
     "description": "Various CRC32 implementations",
     "homepage": "https://github.com/google/php-crc32",
     "type": "library",
-    "license": "Apache 2",
+    "license": "Apache-2.0",
     "authors": [
         {
             "name": "Andrew Brampton",
