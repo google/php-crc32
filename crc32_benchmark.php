@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2015 Google Inc. All Rights Reserved.
+ * Copyright 2019 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,13 @@
  * limitations under the License.
  */
 
-require('crc32.php');
+include __DIR__ . '/vendor/autoload.php';
 
-require('vendor/autoload.php');
+use Google\CRC32\Builtin;
+use Google\CRC32\CRC32;
+use Google\CRC32\Google;
+use Google\CRC32\PHP;
+use Google\CRC32\PHPSlicedBy4;
 
 define('min_duration', 5);       // Min duration of test in seconds.
 define('max_duration', 30);      // Max duration of test in seconds.
@@ -97,10 +101,10 @@ function test($crc, $chunk_size)
 }
 
 foreach (array(256, 4096, 1048576, 16777216) as $chunk_size) {
-    test(new CRC32_PHP(CRC32::CASTAGNOLI), $chunk_size);
-    test(new CRC32_PHP4(CRC32::CASTAGNOLI), $chunk_size);
+    test(new PHP(CRC32::CASTAGNOLI), $chunk_size);
+    test(new PHPSlicedBy4(CRC32::CASTAGNOLI), $chunk_size);
 
     // Using IEEE, avoiding the CASTAGNOLI version crc32c.so adds.
-    test(new CRC32_Builtin(CRC32::IEEE), $chunk_size);
-    test(new CRC32C_Google(), $chunk_size);
+    test(new Builtin(CRC32::IEEE), $chunk_size);
+    test(new Google(), $chunk_size);
 }
