@@ -12,7 +12,7 @@ Supports PHP 5.6 though PHP 7.6.
 # Usage
 
 ```php
-include "vendor/autoload.php";
+require 'vendor/autoload.php';
 
 use Google\CRC32\CRC32;
 
