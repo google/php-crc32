@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2019 Google Inc. All Rights Reserved.
+ * Copyright 2019 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,21 @@
  * limitations under the License.
  */
 
-require('crc32.php');
+use Google\CRC32\CRC32;
 
-$crcs = array('CRC32_PHP', 'CRC32_PHP4', 'CRC32_Builtin', 'CRC32C_Google');
-$algos = array(CRC32::IEEE, CRC32::CASTAGNOLI);
+include __DIR__ . '/vendor/autoload.php';
+
+$crcs = [
+    'Google\CRC32\Implementation\PHP',
+    'Google\CRC32\Implementation\PHPSlicedBy4',
+    'Google\CRC32\Implementation\Builtin',
+    'Google\CRC32\Implementation\Google',
+];
+
+$algos = [
+    CRC32::IEEE,
+    CRC32::CASTAGNOLI
+];
 
 /**
  * Various test data, taken from:

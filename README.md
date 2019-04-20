@@ -12,7 +12,9 @@ Supports PHP 5.6 though PHP 7.6.
 # Usage
 
 ```php
-require('crc32.php');
+require 'vendor/autoload.php';
+
+use Google\CRC32\CRC32;
 
 $crc = CRC32::create(CRC32::CASTAGNOLI);
 $crc->update('hello');
@@ -22,23 +24,23 @@ echo $crc->hash();
 Depending on the environment and the polynomial, `CRC32::create` will choose
 the fastest available verison, and return one of the following classes:
 
-* `CRC32_PHP` - A pure PHP implementation.
-* `CRC32_Builtin` - A [PHP Hash framework](http://php.net/manual/en/book.hash.php) implementation.
-* `CRC32C_Google` - A hardware accelerated implementation (using [google/crc32c](https://github.com/google/crc32c)).
+* `Google\CRC32\PHP` - A pure PHP implementation.
+* `Google\CRC32\Builtin` - A [PHP Hash framework](http://php.net/manual/en/book.hash.php) implementation.
+* `Google\CRC32\Google` - A hardware accelerated implementation (using [google/crc32c](https://github.com/google/crc32c)).
 
 When reading 1M byte chunks, using `CRC32::CASTAGNOLI` with PHP 7.4 on a 2014 Macbook Pro we get the following performance (higher is better):
 
 ```
-CRC32_PHP           12.27 MB/s
-CRC32_Builtin      468.74 MB/s (available since PHP 7.4)
-CRC32C_Google   24,684.46 MB/s (using crc32c.so)
+Google\CRC32\PHP           12.27 MB/s
+Google\CRC32\Builtin       468.74 MB/s (available since PHP 7.4)
+Google\CRC32\Google        24,684.46 MB/s (using crc32c.so)
 ```
 
 # Install
 
-TODO composer install...
-
-TODO pecl install...
+```shell
+$ composer require google/crc32
+```
 
 # crc32c.so
 

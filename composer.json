@@ -16,5 +16,10 @@
     "require-dev": {
         "paragonie/random_compat": ">=2",
         "friendsofphp/php-cs-fixer": "^1.13 || v2.14.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Google\\CRC32\\": "src"
+        }
     }
 }
