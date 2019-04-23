@@ -51,7 +51,7 @@ final class Builtin implements CRCInterface
     public function __construct($polynomial)
     {
         if (!self::supports($polynomial)) {
-            throw new Exception("hash_algos() does not list this polynomial.");
+            throw new \Exception("hash_algos() does not list this polynomial.");
         }
 
         $this->algo = self::$mapping[$polynomial];
