@@ -70,7 +70,9 @@ final class Builtin implements CRCInterface
 
     public function hash($raw_output = null)
     {
-        return hash_final($this->hc, $raw_output);
+        // hash_final will destory the Hash Context resource, so operate on a copy.
+        $hc = hash_copy($this->hc);
+        return hash_final($hc, $raw_output);
     }
 
     public function version()

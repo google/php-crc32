@@ -98,7 +98,14 @@ foreach ($crcs as $crc_class) {
             // Single hash
             $crc->update($input);
 
-            $actual = $crc->hash();
+            $actual = $crc->hash(false);
+            if ($actual !== $expected) {
+                $ok = false;
+                echo "FAIL: $test_name.hash(" . var_export($input, true) . ", false) = $actual wanted $expected\n";
+            }
+
+            // Call hash() again
+            $actual = $crc->hash(false);
             if ($actual !== $expected) {
                 $ok = false;
                 echo "FAIL: $test_name.hash(" . var_export($input, true) . ") = $actual wanted $expected\n";
