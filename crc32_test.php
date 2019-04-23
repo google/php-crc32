@@ -20,10 +20,10 @@ use Google\CRC32\CRC32;
 include __DIR__ . '/vendor/autoload.php';
 
 $crcs = [
-    'Google\CRC32\Implementation\PHP',
-    'Google\CRC32\Implementation\PHPSlicedBy4',
-    'Google\CRC32\Implementation\Builtin',
-    'Google\CRC32\Implementation\Google',
+    'Google\CRC32\PHP',
+    'Google\CRC32\PHPSlicedBy4',
+    'Google\CRC32\Builtin',
+    'Google\CRC32\Google',
 ];
 
 $algos = [
