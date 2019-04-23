@@ -108,7 +108,14 @@ foreach ($crcs as $crc_class) {
             $actual = $crc->hash(false);
             if ($actual !== $expected) {
                 $ok = false;
-                echo "FAIL: $test_name.hash(" . var_export($input, true) . ") = $actual wanted $expected\n";
+                echo "FAIL: $test_name.hash(" . var_export($input, true) . ", false) = $actual wanted $expected\n";
+            }
+
+            // Call hash() with a raw input
+            $actual = $crc->hash(true);
+            if ($actual !== hex2bin($expected)) {
+                $ok = false;
+                echo "FAIL: $test_name.hash(" . var_export($input, true) . ", true) = " . bin2hex($actual) . " wanted $expected\n";
             }
 
             $crc->reset();

@@ -47,7 +47,7 @@ trait CRCTrait
     {
         $crc = $crc & 0xffffffff;
         if ($raw_output) {
-            return pack('L', $crc); // TODO Test this works
+            return pack('N', $crc);
         }
         return self::int2hex($crc);
     }
