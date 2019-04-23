@@ -36,7 +36,7 @@ composer.lock: composer.json
 	touch composer.lock
 
 lint: vendor
-	$(PHP_CS_FIXER) fix --dry-run --diff crc32.php
+	$(PHP_CS_FIXER) fix --dry-run --diff src
 	$(PHP_CS_FIXER) fix --dry-run --diff crc32_benchmark.php
 	$(PHP_CS_FIXER) fix --dry-run --diff crc32_test.php
 	$(PHP_CS_FIXER) fix --dry-run --diff ext/tests
