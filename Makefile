@@ -18,6 +18,7 @@
 
 COMPOSER ?= composer
 PHP_CS_FIXER ?= vendor/bin/php-cs-fixer
+PHP_UNIT ?= vendor/bin/phpunit
 
 PHP_BIN ?= $(shell php-config --prefix)/bin
 PHP ?= $(PHP_BIN)/php
@@ -38,7 +39,7 @@ composer.lock: composer.json
 lint: vendor
 	$(PHP_CS_FIXER) fix --dry-run --diff src
 	$(PHP_CS_FIXER) fix --dry-run --diff crc32_benchmark.php
-	$(PHP_CS_FIXER) fix --dry-run --diff crc32_test.php
+	$(PHP_CS_FIXER) fix --dry-run --diff tests
 	$(PHP_CS_FIXER) fix --dry-run --diff ext/tests
 
 benchmark: ext vendor
@@ -46,7 +47,7 @@ benchmark: ext vendor
 
 test: ext vendor
 	$(PHP) -v
-	$(PHP) -d extension=ext/modules/crc32c.so crc32_test.php
+	$(PHP) -d extension=ext/modules/crc32c.so $(PHP_UNIT) tests/
 
 # Test all the local versions of PHP
 test_all:

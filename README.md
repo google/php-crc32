@@ -99,10 +99,10 @@ To compare the performance of the different `CRC32C` implementations, run `make 
 # TODO
 
 - [ ] Test if this works on 32 bit machine.
-- [ ] Add php unit (or similar) testing.
-- [ ] Publish to packagist
+- [x] Add php unit (or similar) testing.
+- [x] Publish to packagist
 - [ ] Publish to pecl (https://pecl.php.net/account-request.php)
-- [ ] Update instructions for linux.
+- [x] Update instructions for linux.
 
 
 # Licence (Apache 2)
