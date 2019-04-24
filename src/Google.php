@@ -36,7 +36,7 @@ final class Google implements CRCInterface
     public function __construct()
     {
         if (!function_exists('crc32c')) {
-            throw new \Exception("crc32c function not found. Please load the 'crc32c' extension.");
+            throw new \InvalidArgumentException("crc32c function not found. Please load the 'crc32c' extension.");
         }
 
         $this->reset();
