@@ -36,4 +36,21 @@ final class GoogleTest extends TestCase
 
         new Google();
     }
+
+    /**
+     * @dataProvider supports
+     */
+    public function testSupports($algo, $expected)
+    {
+        $this->assertEquals($expected, Google::supports($algo));
+    }
+
+    public function supports()
+    {
+        return [
+            'IEEE' => [CRC32::IEEE, false],
+            'CASTAGNOLI' => [CRC32::CASTAGNOLI, true],
+            'KOOPMAN' => [CRC32::KOOPMAN, false],
+        ];
+    }
 }

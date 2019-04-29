@@ -30,4 +30,21 @@ final class BuiltinTest extends TestCase
 
         new Builtin(CRC32::KOOPMAN);
     }
+
+    /**
+     * @dataProvider supports
+     */
+    public function testSupports($algo, $expected)
+    {
+        $this->assertEquals($expected, Builtin::supports($algo));
+    }
+
+    public function supports()
+    {
+        return [
+            'IEEE' => [CRC32::IEEE, true],
+            'CASTAGNOLI' => [CRC32::CASTAGNOLI, true],
+            'KOOPMAN' => [CRC32::KOOPMAN, false],
+        ];
+    }
 }
