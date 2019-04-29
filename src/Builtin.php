@@ -41,7 +41,7 @@ final class Builtin implements CRCInterface
      */
     public static function supports($polynomial)
     {
-        if (!array_key_exists($polynomial, self::$mapping)) {
+        if (!isset(self::$mapping[$polynomial])) {
             return false;
         }
         $algo = self::$mapping[$polynomial];
