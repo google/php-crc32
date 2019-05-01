@@ -104,7 +104,7 @@ class CRC32
      */
     public static function string($polynomial)
     {
-        if (array_key_exists($polynomial, self::$mapping)) {
+        if (isset(self::$mapping[$polynomial])) {
             return self::$mapping[$polynomial];
         }
         return '0x' . self::int2hex($polynomial);

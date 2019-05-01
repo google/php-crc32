@@ -49,7 +49,7 @@ final class Table
      */
     public static function get($polynomial)
     {
-        if (array_key_exists($polynomial, self::$tables)) {
+        if (isset(self::$tables[$polynomial])) {
             return self::$tables[$polynomial];
         }
         self::$tables[$polynomial] = self::create($polynomial);
