@@ -83,8 +83,10 @@ PHP_FUNCTION(crc32c)
  */
 PHP_RINIT_FUNCTION(crc32c)
 {
-#if defined(ZTS) && defined(COMPILE_DL_CRC32C)
+#if PHP_VERSION_ID >= 70000
+# if defined(ZTS) && defined(COMPILE_DL_CRC32C)
 	ZEND_TSRMLS_CACHE_UPDATE();
+# endif
 #endif
 
 	return SUCCESS;
@@ -162,9 +164,11 @@ zend_module_entry crc32c_module_entry = {
 
 #ifdef COMPILE_DL_CRC32C
 
-# ifdef ZTS
+# if PHP_VERSION_ID >= 70000
+#  ifdef ZTS
 ZEND_TSRMLS_CACHE_DEFINE()
-# endif
+#  endif
+# endif /* PHP_VERSION_ID >= 70000 */
 
 ZEND_GET_MODULE(crc32c)
-#endif
+#endif /* COMPILE_DL_CRC32C */

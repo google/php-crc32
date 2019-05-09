@@ -34,12 +34,13 @@
 #endif
 
 extern zend_module_entry crc32c_module_entry;
-# define phpext_crc32c_ptr &crc32c_module_entry
 
 # define PHP_CRC32C_VERSION "1.0.0"
 
-# if defined(ZTS) && defined(COMPILE_DL_CRC32C)
+# if PHP_VERSION_ID >= 70000
+#  if defined(ZTS) && defined(COMPILE_DL_CRC32C)
 ZEND_TSRMLS_CACHE_EXTERN()
+#  endif
 # endif
 
 static void int2byte(uint32_t i, uint8_t b[4]) {
