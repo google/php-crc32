@@ -49,23 +49,33 @@ To use the hardware accelerated, a custom PHP extension must be installed. This 
 The extension can be installed from pecl, or compiled from stratch.
 
 ```shell
-pecl install crc32c
+TODO pecl install crc32c
 ```
 
 Once installed or compiled, you'll need to add `extension=crc32c.so` to your php.ini file.
 
 ## Compile (Linux / Mac)
+
+Ensure that [composer](https://getcomposer.org), build tools (e.g [build-essential](https://packages.debian.org/sid/devel/build-essential), [cmake](https://packages.debian.org/sid/devel/cmake), etc), and php dev headers (e.g [php-dev](https://packages.debian.org/sid/php/php-dev)) are installed.
+
+Simple (using Makefile):
+
+```shell
+make test
+```
+
+Alternatively (manually):
+
 ```shell
 cd ext
 
-## Install the google/crc32c library
-
+# Install the google/crc32c library
 ./install_crc32c.sh # From source (recommended)
 
 # or use your favorite package manager, e.g.
 # brew install crc32c
 
-## Prepare the build environment
+# Prepare the build environment
 phpize
 ./configure
 
