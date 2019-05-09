@@ -160,10 +160,11 @@ zend_module_entry crc32c_module_entry = {
 };
 /* }}} */
 
-
 #ifdef COMPILE_DL_CRC32C
+
 # ifdef ZTS
 ZEND_TSRMLS_CACHE_DEFINE()
 # endif
+
 ZEND_GET_MODULE(crc32c)
 #endif

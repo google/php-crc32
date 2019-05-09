@@ -62,7 +62,7 @@ ext: ext/modules/crc32c.so
 ext_test: ext
 	NO_INTERACTION=1 $(MAKE) -C ext test
 
-ext/modules/crc32c.so: ext/crc32c.c ext/hash_crc32c.c ext/php_crc32c.h
+ext/modules/crc32c.so: ext/hash_crc32c.c ext/php_crc32c.c ext/php_crc32c.h
 	cd ext && \
 	./install_crc32c.sh && \
 	$(PHPIZE) && \
