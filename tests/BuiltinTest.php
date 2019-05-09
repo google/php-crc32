@@ -26,7 +26,7 @@ final class BuiltinTest extends TestCase
 {
     public function testUnsupported()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->setExpectedException('InvalidArgumentException');
 
         new Builtin(CRC32::KOOPMAN);
     }

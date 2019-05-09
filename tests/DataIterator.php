@@ -114,7 +114,7 @@ class DataIterator implements Iterator
         '12345678901234567890123456789012345678901234567890123456789012345678901234567890' => array('7ca94a72', '477a6781'),
         'message digest' => array('20159d7f', '02bd79d0'),
         "I can't remember anything" => array('69147a4e', '5e405e93'),
-        "I can't remember anything" . "Can’t tell if this is true or dream" => array('3ee63999', '516ad412'),
+        "I can't remember anythingCan’t tell if this is true or dream" => array('3ee63999', '516ad412'),
         'Discard medicine more than two years old.' => array('6b9cdfe7', 'b2cc01fe'),
         'He who has a shady past knows that nice guys finish last.' => array('c90ef73f', '0e28207f'),
         "I wouldn't marry him with a ten foot pole." => array('b902341f', 'be93f964'),
