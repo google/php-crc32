@@ -20,13 +20,8 @@
  * This file contains the crc32c hash function for
  * http://php.net/manual/en/function.hash.php
  */
-#ifdef HAVE_CONFIG_H
-# include "config.h"
-#endif
-
-#include "php.h"
 #include "php_crc32c.h"
-#include "ext/standard/info.h"
+
 #include "ext/hash/php_hash.h"
 #include "ext/hash/php_hash_crc32.h"
 

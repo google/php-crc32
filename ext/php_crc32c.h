@@ -20,8 +20,18 @@
 #ifndef PHP_CRC32C_H
 # define PHP_CRC32C_H
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
+#include "php.h"
+
 #include <stdint.h>
 #include <stdbool.h>
+
+#ifdef ZTS
+# include "TSRM.h"
+#endif
 
 extern zend_module_entry crc32c_module_entry;
 # define phpext_crc32c_ptr &crc32c_module_entry
@@ -37,10 +47,6 @@ static void int2byte(uint32_t i, uint8_t b[4]) {
 	b[1] = (uint8_t) ((i >> 16) & 0xff);
 	b[2] = (uint8_t) ((i >> 8) & 0xff);
 	b[3] = (uint8_t) (i & 0xff);
-}
-
-static uint32_t byte2int(const uint8_t hash[4]) {
-	return (hash[0] << 24) | (hash[1] << 16) | (hash[2] << 8) | hash[3];
 }
 
 #endif	/* PHP_CRC32C_H */

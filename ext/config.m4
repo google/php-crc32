@@ -59,5 +59,5 @@ if test "$PHP_CRC32C" != "no"; then
   ])
   
   PHP_SUBST(CRC32C_SHARED_LIBADD)
-  PHP_NEW_EXTENSION(crc32c, crc32c.c hash_crc32c.c, $ext_shared)
+  PHP_NEW_EXTENSION(crc32c, hash_crc32c.c php_crc32c.c, $ext_shared, , -Wall -Werror)
 fi

@@ -19,18 +19,19 @@
  *
  * This file sets up the crc32c module, and provide the 'crc32c' function.
  */
-#ifdef HAVE_CONFIG_H
-# include "config.h"
-#endif
 
-#include "php.h"
 #include "php_crc32c.h"
+
 #include "ext/hash/php_hash.h"
 #include "ext/standard/info.h"
 
 #include "crc32c/crc32c.h"
 
 extern const php_hash_ops crc32_ops;
+
+static uint32_t byte2int(const uint8_t hash[4]) {
+	return (hash[0] << 24) | (hash[1] << 16) | (hash[2] << 8) | hash[3];
+}
 
 /* {{{ int crc32c( string $data [, int $crc ] )
  */
