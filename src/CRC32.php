@@ -79,7 +79,7 @@ class CRC32
      *                               or one of the supplied constants, CRC32::IEEE,
      *                               CRC32::CASTAGNOLI, or CRC32::KOOPMAN.
      *
-     * @return  CRC32Interface
+     * @return  CRCInterface
      */
     public static function create($polynomial)
     {
