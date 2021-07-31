@@ -22,7 +22,7 @@ echo $crc->hash();
 ```
 
 Depending on the environment and the polynomial, `CRC32::create` will choose
-the fastest available verison, and return one of the following classes:
+the fastest available version, and return one of the following classes:
 
 * `Google\CRC32\PHP` - A pure PHP implementation.
 * `Google\CRC32\Builtin` - A [PHP Hash framework](http://php.net/manual/en/book.hash.php) implementation.
