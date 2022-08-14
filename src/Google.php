@@ -28,6 +28,9 @@ use Google\CRC32\CRCInterface;
  */
 final class Google implements CRCInterface
 {
+
+    private $crc;
+
     public static function supports($algo)
     {
         return $algo === CRC32::CASTAGNOLI;
