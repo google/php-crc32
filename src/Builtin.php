@@ -26,6 +26,7 @@ use Google\CRC32\CRCInterface;
 final class Builtin implements CRCInterface
 {
     private $hc;
+    private $algo;
 
     private static $mapping = [
         CRC32::IEEE => 'crc32b',
