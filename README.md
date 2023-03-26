@@ -1,13 +1,13 @@
 # php-crc32
 
-[![Build Status](https://travis-ci.org/google/php-crc32.svg?branch=master)](https://travis-ci.org/google/php-crc32)
+![Build Status](https://github.com/google/php-crc32/actions/workflows/test.yml/badge.svg)
 
 by [Andrew Brampton](https://bramp.net)
 
 CRC32 implementations, that support all crc32 polynomials, as well as (if you
 install the pecl extension) hardware accelerated versions of CRC32C (Castagnoli).
 
-Supports PHP 5.4 though PHP 7.4.
+Supports PHP 5.4 though PHP 8.2.
 
 # Usage
 
@@ -120,7 +120,7 @@ To compare the performance of the different `CRC32C` implementations, run `make 
 *This is not an official Google product (experimental or otherwise), it is just code that happens to be owned by Google.*
 
 ```
-Copyright 2019 Google Inc. All Rights Reserved.
+Copyright 2023 Google Inc. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
