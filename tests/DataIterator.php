@@ -20,11 +20,11 @@ use Google\CRC32\CRC32;
 
 class CRCIterator implements Iterator
 {
+    // This assumes all CRC providers are available.
     protected $crcs = [
         'Google\CRC32\PHP',
         'Google\CRC32\PHPSlicedBy4',
         'Google\CRC32\Builtin',
-        'Google\CRC32\Google',
     ];
 
     protected $algos = [
@@ -37,7 +37,7 @@ class CRCIterator implements Iterator
     public function __construct()
     {
         if (extension_loaded('crc32c')) {
-            array_push($crcs, 'Google\CRC32\Google');
+            array_push($this->crcs, 'Google\CRC32\Google');
         }
     }
 
@@ -90,7 +90,6 @@ class DataIterator implements Iterator
         'Google\CRC32\PHP',
         'Google\CRC32\PHPSlicedBy4',
         'Google\CRC32\Builtin',
-        'Google\CRC32\Google',
     ];
 
     protected $algos = [
@@ -152,7 +151,7 @@ class DataIterator implements Iterator
     public function __construct()
     {
         if (extension_loaded('crc32c')) {
-            array_push($crcs, 'Google\CRC32\Google');
+            array_push($this->crcs, 'Google\CRC32\Google');
         }
     }
 
