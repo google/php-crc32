@@ -30,7 +30,7 @@ final class Builtin implements CRCInterface
 
     private static $mapping = [
         CRC32::IEEE => 'crc32b',
-        CRC32::CASTAGNOLI => 'crc32c',
+        CRC32::CASTAGNOLI => 'crc32c', // Added since PHP 7.4
     ];
 
     /**
