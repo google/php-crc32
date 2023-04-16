@@ -7,7 +7,7 @@ by [Andrew Brampton](https://bramp.net)
 CRC32 implementations, that support all crc32 polynomials, as well as (if you
 install the pecl extension) hardware accelerated versions of CRC32C (Castagnoli).
 
-Supports PHP 5.4 though PHP 8.2.
+Supports PHP 7.4 though PHP 8.2. Older PHP versions are supported with "v0.1.0".
 
 # Usage
 
