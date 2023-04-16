@@ -4,6 +4,8 @@
 
 by [Andrew Brampton](https://bramp.net)
 
+**Deprecated**: Since PHP 8.0, the crc32 algorithms within PHP are using [hardware accelerated instructions](https://github.com/php/php-src/commit/c3299d7dab15aeed52a34535f1967d426f5327de), and are surprisingly fast. Thus this extension is not needed anymore!
+
 CRC32 implementations, that support all crc32 polynomials, as well as (if you
 install the pecl extension) hardware accelerated versions of CRC32C (Castagnoli).
 
